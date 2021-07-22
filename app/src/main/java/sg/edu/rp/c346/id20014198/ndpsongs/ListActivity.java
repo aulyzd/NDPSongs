@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,6 +22,7 @@ public class ListActivity extends AppCompatActivity {
     ArrayList<Song> al;
     ArrayAdapter<Song> aa;
     int requestCode = 9;
+    Song data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,15 +33,16 @@ public class ListActivity extends AppCompatActivity {
         spyear = findViewById(R.id.spYear);
         lv = findViewById(R.id.lv);
 
+
         DBHelper dbh = new DBHelper(this);
         al = dbh.getAllSongs();
         dbh.close();
 
-
-        aa = new ArrayAdapter<Song>(this,
-                android.R.layout.simple_list_item_1, al);
+        //aa = new ArrayAdapter<Song>(this,
+        //        android.R.layout.simple_list_item_1, al);
+        //lv.setAdapter(aa);
+        aa = new CustomAdapter(this,R.layout.row,al);
         lv.setAdapter(aa);
-
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -50,6 +53,37 @@ public class ListActivity extends AppCompatActivity {
             }
         });
 
+        btnshowstars.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<Song> stars = new ArrayList<>();
+                for (Song i : al) {
+                    if (i.getStars() == 5) {
+                        stars.add(i);
+                    } else {
+                        Toast.makeText(ListActivity.this, "The stars is not 5 stars", Toast.LENGTH_SHORT).show();
+                    }
+                    aa = new CustomAdapter(ListActivity.this,R.layout.row, stars);
+
+                }
+                lv.setAdapter(aa);
+
+            }
+        });
+
+
 
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ArrayList<Song> al2;
+        DBHelper db = new DBHelper(this);
+        al2 = db.getAllSongs();
+        al.clear();
+        al.addAll(al2);
+        aa.notifyDataSetChanged();
+    }
+
+
 }
