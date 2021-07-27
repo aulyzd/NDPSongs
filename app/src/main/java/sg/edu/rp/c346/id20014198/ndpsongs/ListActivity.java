@@ -10,6 +10,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.IntegerRes;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -21,6 +22,8 @@ public class ListActivity extends AppCompatActivity {
     ListView lv;
     ArrayList<Song> al;
     ArrayAdapter<Song> aa;
+    ArrayList<String> al0;
+    ArrayAdapter<String> ab;
     int requestCode = 9;
     Song data;
 
@@ -67,6 +70,24 @@ public class ListActivity extends AppCompatActivity {
 
                 }
                 lv.setAdapter(aa);
+
+            }
+        });
+
+        ArrayList<String> al0 = new ArrayList<>();
+        al0.add(data.getYear()+"");
+        ab = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, al0);
+        ab.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spyear.setAdapter(ab);
+
+        spyear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String year = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
